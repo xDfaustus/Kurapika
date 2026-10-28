@@ -614,21 +614,35 @@
     applyMode();
   });
 
-  // --- Playlist del reproductor: 3 pistas instrumentales de muestra ---
+  // --- Reproductor: primero intenta los MP3 locales y usa una alternativa si faltan ---
   const musicTracks = [
-    { title: 'Nen Theme • Track 1', name: '01 · SoundHelix Song 1', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-    { title: 'Scarlet Aura • Track 2', name: '02 · SoundHelix Song 2', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-    { title: 'Judgement Chain • Track 3', name: '03 · SoundHelix Song 3', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
+    { title: 'Nen Theme • Track 1', name: '01 · Nen Theme', local: './assets/0.mp3', fallback: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+    { title: 'Scarlet Aura • Track 2', name: '02 · Scarlet Aura', local: './assets/1.mp3', fallback: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+    { title: 'Judgement Chain • Track 3', name: '03 · Judgement Chain', local: './assets/2.mp3', fallback: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
   ];
   const musicAudio = document.getElementById('musicAudio');
   const musicTrackSelect = document.getElementById('musicTrackSelect');
   const musicTrackTitle = document.getElementById('musicTrackTitle');
-  const musicStatus = document.getElementById('musicStatus');
   const musicPlay = document.getElementById('musicPlay');
   const musicVolume = document.getElementById('musicVolume');
   const musicVolumeValue = document.getElementById('musicVolumeValue');
   const musicVolumeIcon = document.getElementById('musicVolumeIcon');
+  const musicPrev = document.getElementById('musicPrev');
+  const musicNext = document.getElementById('musicNext');
   let currentTrack = 0;
+  let triedFallback = false;
+  let requestedAutoplay = false;
+
+  // Oculta el control gris nativo del navegador: solo se ven los botones diseñados.
+  musicAudio.removeAttribute('controls');
+  musicAudio.preload = 'auto';
+  musicTrackSelect.innerHTML = '';
+  musicTracks.forEach((track, index) => {
+    const option = document.createElement('option');
+    option.value = String(index);
+    option.textContent = track.name;
+    musicTrackSelect.appendChild(option);
+  });
 
   function updateMusicVolume() {
     const volume = Number(musicVolume.value);
@@ -637,47 +651,74 @@
     musicVolumeIcon.textContent = volume === 0 ? '🔇' : volume < 50 ? '🔉' : '🔊';
     musicVolume.setAttribute('aria-valuetext', volume + '%');
   }
-
   musicVolume.addEventListener('input', updateMusicVolume);
   updateMusicVolume();
 
   function loadMusicTrack(index, autoplay = false) {
     currentTrack = (index + musicTracks.length) % musicTracks.length;
     const track = musicTracks[currentTrack];
-    musicAudio.src = track.src;
+    requestedAutoplay = autoplay;
+    triedFallback = false;
+    musicAudio.pause();
+    musicAudio.src = track.local;
+    musicAudio.load();
     musicTrackSelect.value = String(currentTrack);
     musicTrackTitle.textContent = track.title;
     musicPlay.textContent = '▶';
+    musicPlay.title = 'Reproducir';
     if (autoplay) {
-      musicAudio.play().then(() => {
-        musicPlay.textContent = 'Ⅱ';
-      }).catch(() => {
+      const startPlayback = () => musicAudio.play().catch(() => {
         musicPlay.textContent = '▶';
+        musicPlay.title = 'Pulsa para reproducir';
       });
-    } else {
-      musicAudio.load();
+      if (musicAudio.readyState >= 2) startPlayback();
+      else musicAudio.addEventListener('canplay', startPlayback, { once: true });
     }
   }
 
-  musicTrackSelect.addEventListener('change', () => loadMusicTrack(Number(musicTrackSelect.value)));
-  document.getElementById('musicPrev').addEventListener('click', () => loadMusicTrack(currentTrack - 1, true));
-  document.getElementById('musicNext').addEventListener('click', () => loadMusicTrack(currentTrack + 1, true));
+  musicTrackSelect.addEventListener('change', () => loadMusicTrack(Number(musicTrackSelect.value), false));
+  musicPrev.addEventListener('click', () => loadMusicTrack(currentTrack - 1, true));
+  musicNext.addEventListener('click', () => loadMusicTrack(currentTrack + 1, true));
   musicPlay.addEventListener('click', () => {
     if (musicAudio.paused) {
-      musicAudio.play().then(() => { musicPlay.textContent = 'Ⅱ'; })
-        .catch(() => { musicPlay.textContent = '▶'; });
+      requestedAutoplay = true;
+      musicAudio.play().catch(() => {
+        musicPlay.textContent = '▶';
+        musicPlay.title = 'No se pudo cargar el audio';
+      });
     } else {
+      requestedAutoplay = false;
       musicAudio.pause();
-      musicPlay.textContent = '▶';
     }
   });
-  musicAudio.addEventListener('play', () => { musicPlay.textContent = 'Ⅱ'; });
-  musicAudio.addEventListener('pause', () => { musicPlay.textContent = '▶'; });
+  musicAudio.addEventListener('play', () => {
+    musicPlay.textContent = 'Ⅱ';
+    musicPlay.title = 'Pausar';
+  });
+  musicAudio.addEventListener('pause', () => {
+    musicPlay.textContent = '▶';
+    musicPlay.title = 'Reproducir';
+  });
   musicAudio.addEventListener('ended', () => loadMusicTrack(currentTrack + 1, true));
   musicAudio.addEventListener('error', () => {
+    const track = musicTracks[currentTrack];
+    // Si no existe el MP3 local, intenta una pista de muestra online una sola vez.
+    if (!triedFallback && track && musicAudio.currentSrc && musicAudio.currentSrc.includes('/assets/')) {
+      triedFallback = true;
+      musicAudio.src = track.fallback;
+      musicAudio.load();
+      if (requestedAutoplay) {
+        musicAudio.addEventListener('canplay', () => {
+          musicAudio.play().catch(() => { musicPlay.textContent = '▶'; });
+        }, { once: true });
+      }
+      return;
+    }
     musicPlay.textContent = '▶';
+    musicPlay.title = 'Audio no disponible: revisa la carpeta assets o tu conexión';
+    console.warn('No se pudo cargar la pista. Revisa que exista assets/' + currentTrack + '.mp3 o que la conexión permita el audio externo.');
   });
-  loadMusicTrack(0);
+  loadMusicTrack(0, false);
 
   // --- Animation Loop: Partículas de Aura Nen en Canvas ---
   const canvas = document.getElementById('auraCanvas');
