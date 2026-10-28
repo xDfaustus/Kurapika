@@ -4,17 +4,17 @@
     {
       title: 'Nen Theme • Track 1',
       name: '01 · Track 1',
-      src: './assets/0.mp3'
+   src: 'assets/0.mp3'
     },
     {
       title: 'Scarlet Aura • Track 2',
       name: '02 · Track 2',
-      src: './assets/1.mp3'
+ src: 'assets/1.mp3'
     },
     {
       title: 'Judgement Chain • Track 3',
       name: '03 · Track 3',
-      src: './assets/2.mp3'
+      src: 'assets/2.mp3'
     }
   ];
 
