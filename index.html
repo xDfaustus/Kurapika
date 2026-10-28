@@ -510,13 +510,13 @@
       </div>
     </div>
 
-    <!-- Bloque de Fecha Left Side -->
+    <!-- Bloque de Fecha en Tiempo Real -->
     <div class="date-badge">
-      <div class="date-numbers" id="displayDate">17<br>25</div>
-      <div class="date-month" id="displayMonth">OCTOBER</div>
+      <div class="date-numbers" id="realtimeDate">--</div>
+      <div class="date-month" id="realtimeMonth">----</div>
     </div>
 
-    <!-- REPRODUCTOR DE MÚSICA: reemplaza los emblemas laterales -->
+    <!-- REPRODUCTOR DE MÚSICA -->
     <section class="music-player" aria-label="Reproductor de música">
       <div class="music-player-heading">
         <span class="music-player-icon" aria-hidden="true">♫</span>
@@ -525,17 +525,13 @@
           <span id="musicTrackTitle">Nen Theme • Track 1</span>
         </div>
       </div>
-      <select id="musicTrackSelect" class="music-track-select" aria-label="Elegir canción">
-        <option value="0">01 · SoundHelix Song 1</option>
-        <option value="1">02 · SoundHelix Song 2</option>
-        <option value="2">03 · SoundHelix Song 3</option>
-      </select>
+      <select id="musicTrackSelect" class="music-track-select" aria-label="Elegir canción"></select>
       <audio id="musicAudio" preload="none" crossorigin="anonymous">
         Tu navegador no admite la reproducción de audio.
       </audio>
       <div class="music-player-buttons">
         <button type="button" id="musicPrev" aria-label="Canción anterior" title="Anterior">|◀</button>
-        <button type="button" id="musicPlay" aria-label="Reproducir o pausar" title="Reproducir / Pausar">▶</button>
+        <button type="button" id="musicPlay" aria-label="Reproducir música" title="Reproducir / Pausar">▶</button>
         <button type="button" id="musicNext" aria-label="Siguiente canción" title="Siguiente">▶|</button>
       </div>
       <div class="music-volume">
@@ -549,233 +545,271 @@
     <button class="energy-btn absolute left-4 top-[50%] -translate-y-1/2 z-20" id="prevModeBtn" title="Anterior Modo Nen">◀</button>
     <button class="energy-btn absolute right-4 top-[50%] -translate-y-1/2 z-20" id="nextModeBtn" title="Siguiente Modo Nen">▶</button>
 
-    <!-- PERSONAJE PRINCIPAL (ILUSTRACIÓN) -->
+    <!-- PERSONAJE PRINCIPAL -->
     <div class="absolute inset-0 z-3 flex items-center justify-center pointer-events-none">
      <img id="mainHeroImg" src="https://i.ibb.co/YB02t5yW/500px-x-700px.png" alt="Kurapika Hunter x Hunter" class="hero-character h-[95%] w-auto object-contain mt-6" onerror="this.onerror=null; this.src='https://placehold.co/600x800/101420/ffcc00?text=Kurapika+Nen';">
     </div>
 
-    <!-- TÍTULO CENTRAL ENCLAVADO ROTADO "MCYSTN DESIGN" -->
+    <!-- TÍTULO CENTRAL ROTADO -->
     <div class="hero-title-lockup">
-      <span class="hero-title-main" id="displayMainTitle">Shirou</span>
-      <span class="hero-title-sub" id="displaySubTitle">space</span>
+      <span class="hero-title-main">Shirou</span>
+      <span class="hero-title-sub">space</span>
     </div>
 
-    <!-- TARJETA INFERIOR IZQUIERDA: OJOS ESCARLATA (SCARLET EYES ZOOM) -->
+    <!-- TARJETA INFERIOR IZQUIERDA -->
     <div class="scarlet-eyes-card">
-      <img id="scarletImg" src="https://i.ibb.co/jky6Mp8G/Dise-o-sin-t-tulo-15.png"  alt="Scarlet Eyes Zoom">
+      <img src="https://i.ibb.co/jky6Mp8G/Dise-o-sin-t-tulo-15.png" alt="Scarlet Eyes Zoom">
     </div>
 
-    <!-- TARJETA INFERIOR DERECHA: MINIATURA COMPLETA -->
+    <!-- TARJETA INFERIOR DERECHA -->
     <div class="mini-figure-card">
-      <img id="miniFigImg" src="https://i.ibb.co/DdNwqkv/7956bc137da1a171f3abaac240627cba.jpg" alt="Mini Figure Kurapika">
+      <img src="https://i.ibb.co/DdNwqkv/7956bc137da1a171f3abaac240627cba.jpg" alt="Mini Figure Kurapika">
     </div>
 
-    <!-- CITA INFERIOR Y CHEVRONES -->
+    <!-- CITA INFERIOR -->
     <div class="quote-bottom">
-      <p id="displayBottomQuote">if you can change your mind,<br>you can change your life!</p>
+      <p>if you can change your mind,<br>you can change your life!</p>
       <div class="text-[var(--primary)] font-black text-xl tracking-widest mt-1">««««««««</div>
     </div>
 
     <!-- PIE DE PÁGINA BANNER -->
     <div class="absolute bottom-11 left-0 w-full text-center z-10">
-      <h2 class="font-black text-xl sm:text-2xl tracking-[0.2em] text-[var(--primary)] text-shadow" id="displayFooterBanner">
+      <h2 class="font-black text-xl sm:text-2xl tracking-[0.2em] text-[var(--primary)] text-shadow">
         KURAPIKA HUNTER × HUNTER
       </h2>
     </div>
 
-    <!-- REPETICIÓN TICKER BASE -->
-  <div class="footer-ticker" id="displayTicker">
-    <span>mcystn</span><span>mcystn</span><span>mcystn</span><span>mcystn</span><span>mcystn</span><span>mcystn</span>
+    <!-- TICKER BASE -->
+    <div class="footer-ticker">
+      <span>mcystn</span><span>mcystn</span><span>mcystn</span><span>mcystn</span><span>mcystn</span><span>mcystn</span>
+    </div>
   </div>
-</div>
 
-<!-- JS / LÓGICA DE INTERACTIVIDAD Y CANVASES -->
-<script>
-  // --- Lógica del Sistema de Modos de Energía Nen ---
-  const modes = [
-    { id: 'gold', class: '', color: '#ffcc00' },
-    { id: 'scarlet', class: 'mode-scarlet', color: '#ff1a40' },
-    { id: 'judgement', class: 'mode-judgement', color: '#00f0ff' }
-  ];
-  let currentModeIdx = 0;
+  <!-- SCRIPT INTEGRADO -->
+  <script>
+    // --- Actualizar Fecha en Tiempo Real ---
+    function updateRealtimeDate() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      
+      // Obtenemos las primeras 3 letras del mes en inglés (ej. JAN, FEB, MAR) o puedes usar 'es-ES' para español
+      const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      const month = monthNames[now.getMonth()];
 
-  function applyMode() {
-    const mode = modes[currentModeIdx];
-    document.body.className = "p-2 sm:p-6 flex flex-col items-center justify-center min-h-screen " + mode.class;
-  }
-
-  document.getElementById('nextModeBtn').addEventListener('click', () => {
-    currentModeIdx = (currentModeIdx + 1) % modes.length;
-    applyMode();
-  });
-
-  document.getElementById('prevModeBtn').addEventListener('click', () => {
-    currentModeIdx = (currentModeIdx - 1 + modes.length) % modes.length;
-    applyMode();
-  });
-
-  // --- Reproductor: primero intenta los MP3 locales y usa una alternativa si faltan ---
-  const musicTracks = [
-    { title: 'Nen Theme • Track 1', name: '01 · Nen Theme', local: './assets/0.mp3', fallback: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-    { title: 'Scarlet Aura • Track 2', name: '02 · Scarlet Aura', local: './assets/1.mp3', fallback: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-    { title: 'Judgement Chain • Track 3', name: '03 · Judgement Chain', local: './assets/2.mp3', fallback: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
-  ];
-  const musicAudio = document.getElementById('musicAudio');
-  const musicTrackSelect = document.getElementById('musicTrackSelect');
-  const musicTrackTitle = document.getElementById('musicTrackTitle');
-  const musicPlay = document.getElementById('musicPlay');
-  const musicVolume = document.getElementById('musicVolume');
-  const musicVolumeValue = document.getElementById('musicVolumeValue');
-  const musicVolumeIcon = document.getElementById('musicVolumeIcon');
-  const musicPrev = document.getElementById('musicPrev');
-  const musicNext = document.getElementById('musicNext');
-  let currentTrack = 0;
-  let triedFallback = false;
-  let requestedAutoplay = false;
-
-  // Oculta el control gris nativo del navegador: solo se ven los botones diseñados.
-  musicAudio.removeAttribute('controls');
-  musicAudio.preload = 'auto';
-  musicTrackSelect.innerHTML = '';
-  musicTracks.forEach((track, index) => {
-    const option = document.createElement('option');
-    option.value = String(index);
-    option.textContent = track.name;
-    musicTrackSelect.appendChild(option);
-  });
-
-  function updateMusicVolume() {
-    const volume = Number(musicVolume.value);
-    musicAudio.volume = volume / 100;
-    musicVolumeValue.textContent = volume + '%';
-    musicVolumeIcon.textContent = volume === 0 ? '🔇' : volume < 50 ? '🔉' : '🔊';
-    musicVolume.setAttribute('aria-valuetext', volume + '%');
-  }
-  musicVolume.addEventListener('input', updateMusicVolume);
-  updateMusicVolume();
-
-  function loadMusicTrack(index, autoplay = false) {
-    currentTrack = (index + musicTracks.length) % musicTracks.length;
-    const track = musicTracks[currentTrack];
-    requestedAutoplay = autoplay;
-    triedFallback = false;
-    musicAudio.pause();
-    musicAudio.src = track.local;
-    musicAudio.load();
-    musicTrackSelect.value = String(currentTrack);
-    musicTrackTitle.textContent = track.title;
-    musicPlay.textContent = '▶';
-    musicPlay.title = 'Reproducir';
-    if (autoplay) {
-      const startPlayback = () => musicAudio.play().catch(() => {
-        musicPlay.textContent = '▶';
-        musicPlay.title = 'Pulsa para reproducir';
-      });
-      if (musicAudio.readyState >= 2) startPlayback();
-      else musicAudio.addEventListener('canplay', startPlayback, { once: true });
+      document.getElementById('realtimeDate').innerHTML = day + '<br>' + String(now.getFullYear()).slice(-2);
+      document.getElementById('realtimeMonth').textContent = month;
     }
-  }
+    updateRealtimeDate();
 
-  musicTrackSelect.addEventListener('change', () => loadMusicTrack(Number(musicTrackSelect.value), false));
-  musicPrev.addEventListener('click', () => loadMusicTrack(currentTrack - 1, true));
-  musicNext.addEventListener('click', () => loadMusicTrack(currentTrack + 1, true));
-  musicPlay.addEventListener('click', () => {
-    if (musicAudio.paused) {
-      requestedAutoplay = true;
-      musicAudio.play().catch(() => {
-        musicPlay.textContent = '▶';
-        musicPlay.title = 'No se pudo cargar el audio';
-      });
-    } else {
-      requestedAutoplay = false;
-      musicAudio.pause();
+    // --- Lógica del Sistema de Modos de Energía Nen ---
+    const modes = [
+      { id: 'gold', class: '', color: '#ffcc00' },
+      { id: 'scarlet', class: 'mode-scarlet', color: '#ff1a40' },
+      { id: 'judgement', class: 'mode-judgement', color: '#00f0ff' }
+    ];
+    let currentModeIdx = 0;
+
+    function applyMode() {
+      const mode = modes[currentModeIdx];
+      document.body.className = "p-2 sm:p-6 flex flex-col items-center justify-center min-h-screen " + mode.class;
     }
-  });
-  musicAudio.addEventListener('play', () => {
-    musicPlay.textContent = 'Ⅱ';
-    musicPlay.title = 'Pausar';
-  });
-  musicAudio.addEventListener('pause', () => {
-    musicPlay.textContent = '▶';
-    musicPlay.title = 'Reproducir';
-  });
-  musicAudio.addEventListener('ended', () => loadMusicTrack(currentTrack + 1, true));
-  musicAudio.addEventListener('error', () => {
-    const track = musicTracks[currentTrack];
-    // Si no existe el MP3 local, intenta una pista de muestra online una sola vez.
-    if (!triedFallback && track && musicAudio.currentSrc && musicAudio.currentSrc.includes('/assets/')) {
-      triedFallback = true;
-      musicAudio.src = track.fallback;
-      musicAudio.load();
-      if (requestedAutoplay) {
-        musicAudio.addEventListener('canplay', () => {
-          musicAudio.play().catch(() => { musicPlay.textContent = '▶'; });
-        }, { once: true });
+
+    document.getElementById('nextModeBtn').addEventListener('click', () => {
+      currentModeIdx = (currentModeIdx + 1) % modes.length;
+      applyMode();
+    });
+
+    document.getElementById('prevModeBtn').addEventListener('click', () => {
+      currentModeIdx = (currentModeIdx - 1 + modes.length) % modes.length;
+      applyMode();
+    });
+
+    // --- Reproductor de música: archivos locales en assets/ ---
+    const musicTracks = [
+      {
+        title: 'Nen Theme • Track 1',
+        name: '01 · Track 1',
+        src: 'assets/0.mp3'
+      },
+      {
+        title: 'Scarlet Aura • Track 2',
+        name: '02 · Track 2',
+        src: 'assets/1.mp3'
+      },
+      {
+        title: 'Judgement Chain • Track 3',
+        name: '03 · Track 3',
+        src: 'assets/2.mp3'
       }
-      return;
-    }
-    musicPlay.textContent = '▶';
-    musicPlay.title = 'Audio no disponible: revisa la carpeta assets o tu conexión';
-    console.warn('No se pudo cargar la pista. Revisa que exista assets/' + currentTrack + '.mp3 o que la conexión permita el audio externo.');
-  });
-  loadMusicTrack(0, false);
+    ];
 
-  // --- Animation Loop: Partículas de Aura Nen en Canvas ---
-  const canvas = document.getElementById('auraCanvas');
-  const ctx = canvas.getContext('2d');
+    const musicAudio = document.getElementById('musicAudio');
+    const musicTrackSelect = document.getElementById('musicTrackSelect');
+    const musicTrackTitle = document.getElementById('musicTrackTitle');
+    const musicPlay = document.getElementById('musicPlay');
+    const musicVolume = document.getElementById('musicVolume');
+    const musicVolumeValue = document.getElementById('musicVolumeValue');
+    const musicVolumeIcon = document.getElementById('musicVolumeIcon');
+    const musicPrev = document.getElementById('musicPrev');
+    const musicNext = document.getElementById('musicNext');
 
-  function resizeCanvas() {
-    const rect = document.getElementById('profileCard').getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+    let currentTrack = 0;
 
-  // Partículas de Energía
-  class Particle {
-    constructor() {
-      this.reset();
+    musicTrackSelect.replaceChildren();
+
+    musicTracks.forEach((track, index) => {
+      const option = document.createElement('option');
+      option.value = String(index);
+      option.textContent = track.name;
+      musicTrackSelect.appendChild(option);
+    });
+
+    function updateMusicVolume() {
+      const volume = Number(musicVolume.value);
+      musicAudio.volume = volume / 100;
+      musicVolumeValue.textContent = volume + '%';
+      musicVolumeIcon.textContent =
+        volume === 0 ? '🔇' :
+        volume < 50 ? '🔉' : '🔊';
+      musicVolume.setAttribute('aria-valuetext', volume + '%');
     }
-    reset() {
-      this.x = Math.random() * canvas.width;
-      this.y = canvas.height + Math.random() * 50;
-      this.size = Math.random() * 3 + 1;
-      this.speedY = Math.random() * 2 + 1;
-      this.speedX = (Math.random() - 0.5) * 1.5;
-      this.opacity = Math.random() * 0.8 + 0.2;
+
+    musicVolume.addEventListener('input', updateMusicVolume);
+    updateMusicVolume();
+
+    function loadMusicTrack(index, autoplay = false) {
+      currentTrack = (index + musicTracks.length) % musicTracks.length;
+      const track = musicTracks[currentTrack];
+
+      musicAudio.pause();
+      musicAudio.src = track.src;
+      musicAudio.load();
+
+      musicTrackSelect.value = String(currentTrack);
+      musicTrackTitle.textContent = track.title;
+      musicPlay.textContent = '▶';
+      musicPlay.setAttribute('aria-label', 'Reproducir música');
+
+      if (autoplay) {
+        playMusic();
+      }
     }
-    update() {
-      this.y -= this.speedY;
-      this.x += this.speedX;
-      this.opacity -= 0.005;
-      if (this.y < 0 || this.opacity <= 0) {
+
+    function playMusic() {
+      musicAudio.play()
+        .then(() => {
+          musicPlay.textContent = 'Ⅱ';
+          musicPlay.setAttribute('aria-label', 'Pausar música');
+        })
+        .catch(error => {
+          musicPlay.textContent = '▶';
+          console.error(
+            'No se pudo reproducir:',
+            musicAudio.currentSrc,
+            error
+          );
+        });
+    }
+
+    musicTrackSelect.addEventListener('change', () => {
+      loadMusicTrack(Number(musicTrackSelect.value));
+    });
+
+    musicPrev.addEventListener('click', () => {
+      loadMusicTrack(currentTrack - 1, true);
+    });
+
+    musicNext.addEventListener('click', () => {
+      loadMusicTrack(currentTrack + 1, true);
+    });
+
+    musicPlay.addEventListener('click', () => {
+      if (musicAudio.paused) {
+        playMusic();
+      } else {
+        musicAudio.pause();
+      }
+    });
+
+    musicAudio.addEventListener('play', () => {
+      musicPlay.textContent = 'Ⅱ';
+      musicPlay.setAttribute('aria-label', 'Pausar música');
+    });
+
+    musicAudio.addEventListener('pause', () => {
+      musicPlay.textContent = '▶';
+      musicPlay.setAttribute('aria-label', 'Reproducir música');
+    });
+
+    musicAudio.addEventListener('ended', () => {
+      loadMusicTrack(currentTrack + 1, true);
+    });
+
+    musicAudio.addEventListener('error', () => {
+      musicPlay.textContent = '▶';
+      console.error(
+        'Error al cargar el audio:',
+        musicAudio.currentSrc,
+        musicAudio.error
+      );
+    });
+
+    loadMusicTrack(0);
+
+    // --- Animation Loop: Partículas de Aura Nen en Canvas ---
+    const canvas = document.getElementById('auraCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      const rect = document.getElementById('profileCard').getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
         this.reset();
       }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + Math.random() * 50;
+        this.size = Math.random() * 3 + 1;
+        this.speedY = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 1.5;
+        this.opacity = Math.random() * 0.8 + 0.2;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        this.opacity -= 0.005;
+        if (this.y < 0 || this.opacity <= 0) {
+          this.reset();
+        }
+      }
+      draw() {
+        const computedColor = getComputedStyle(document.body).getPropertyValue('--primary').trim() || '#ffcc00';
+        ctx.fillStyle = computedColor;
+        ctx.globalAlpha = this.opacity;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
     }
-    draw() {
-      const computedColor = getComputedStyle(document.body).getPropertyValue('--primary').trim() || '#ffcc00';
-      ctx.fillStyle = computedColor;
-      ctx.globalAlpha = this.opacity;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
+
+    const particles = Array.from({ length: 45 }, () => new Particle());
+
+    function animateAura() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateAura);
     }
-  }
-
-  const particles = Array.from({ length: 45 }, () => new Particle());
-
-  // Animación continua
-  function animateAura() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    requestAnimationFrame(animateAura);
-  }
-  animateAura();
-</script>
+    animateAura();
+  </script>
 </body>
 </html>
